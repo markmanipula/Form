@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+
+    <title>Form</title>
+  </head>
+  <body>
+    <div id="main_container">
+      <div id="left_main_portion">
+        <form id="left_form">
+          <label>Destination</label>
+          <input
+            name="destination_name"
+            id="destination"
+            type="text"
+            placeholder="Enter destination"
+            required
+          /><br />
+          <label>Location</label>
+          <input
+            name="location_name"
+            id="location"
+            type="text"
+            placeholder="Enter location"
+            required
+          /><br />
+          <label>Photo</label>
+          <input
+            name="photo_name"
+            id="photo"
+            type="url"
+            placeholder="Enter photo URL"
+          /><br />
+          <label>Description</label>
+          <input
+            name="description_name"
+            id="description"
+            type="text"
+            placeholder="Enter description"
+          /><br />
+          <input id="submit" type="submit" value="submit form" />
+        </form>
+      </div>
+      <div id="right_wishlist">
+        <p class="center">Enter Destination</p>
+
+        <!-- wishlist cards -->
+        <div id="wishlist_container"></div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
