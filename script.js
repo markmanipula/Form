@@ -1,14 +1,13 @@
 //when submit is clicked, get the id of the input. then get the value of that. then console log it
 //make sure form is not being refreshed
 
-document.getElementById("left_form").addEventListener("submit", addCards);
+document.getElementById("left_form").addEventListener("submit", handleSubmit);
 
 function consoleLogInput(event) {
   event.preventDefault();
 
   const destinationLog = document.getElementById("destination").value;
   const locationLog = document.getElementById("location").value;
-  const photoLog = document.getElementById("photo").value;
   const descriptionLog = document.getElementById("description").value;
 
   console.log(destinationLog, locationLog, photoLog, descriptionLog);
@@ -16,27 +15,63 @@ function consoleLogInput(event) {
   resetValues();
 }
 
-function addCards(event) {
-  event.preventDefault();
+function handleSubmit(e) {
+  e.preventDefault();
 
-  const element = event.target;
+  const userDestinationInput = document.getElementById("destination").value;
+  const userLocationInput = document.getElementById("location").value;
+  const url =
+    "https://api.unsplash.com/search/photos/?query=" +
+    userDestinationInput +
+    "%20" +
+    userLocationInput +
+    "&client_id=hlKxc2FU2gi-xIya9DZXnOjxfV1zNk9DE36J1lILiAc";
 
-  const destinationString = element.destination_name.value;
+  fetch(url)
+    .then((response) => response.json())
+    .then((pictures) => addPictures(pictures.results));
+}
+
+function addPictures(pictures) {
+  //const element = event.target;
+
+  //console.log(pictures[0].urls);
+  const random = Math.floor(Math.random() * pictures.length);
+
+  const photoURL = pictures[random].urls.small;
+
+  const userDestinationInput = document.getElementById("destination").value;
+  const userLocationInput = document.getElementById("location").value;
+  const userDescriptionInput = document.getElementById("description").value;
+
+  const card = document.createElement("div");
+  card.classList.add("card");
+  card.style.width = "18rem";
+
+  card.innerHTML = `
+    <img class="card-img-top" src=${photoURL}>
+    <div class="card-body">
+      <h5 class="card-title">${userDestinationInput}</h5>
+      <p class="card-text">${userLocationInput}</p>
+      <p class="card-text">${userDescriptionInput}</p>
+    </div>
+  `;
+
+  document.getElementById("wishlist_container").appendChild(card);
+
+  /* const destinationString = element.destination_name.value;
   const locationString = element.location_name.value;
-  let photoURL = element.photo_name.value;
   const descriptionString = element.description_name.value;
 
-  if (photoURL == "") {
-    photoURL =
-      "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1113&q=80";
-  }
+  const defaultPhotoURL =
+    "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1113&q=80";
 
   const outputCard = document.createElement("div");
   outputCard.classList.add("card");
   outputCard.style.width = "13rem";
 
   outputCard.innerHTML = `
-  <img src=${photoURL}>
+  <img src=${defaultPhotoURL}>
   <div class="card-body">
     <h5 class="card-title">${destinationString}</h5>
     <p class="card-text">${locationString}</p>
@@ -55,6 +90,7 @@ function addCards(event) {
   document
     .getElementById("wishlist_container")
     .addEventListener("click", editOrDelete);
+    */
 }
 
 function editOrDelete(e) {
@@ -72,12 +108,10 @@ function editCard(e) {
 
   const newDestination = prompt("Enter new destination");
   const newLocation = prompt("Enter new location");
-  const newPhotoURL = prompt("Enter new photo URL");
   const newDescription = prompt("Enter new description");
 
   const oldDestination = element.parentElement.children[0];
   const oldLocation = element.parentElement.children[1];
-  const oldPhotoURL = element.parentElement.parentElement.children[0];
   const oldDescription = element.parentElement.children[2];
 
   if (newDestination !== "") {
@@ -85,9 +119,6 @@ function editCard(e) {
   }
   if (newLocation !== "") {
     oldLocation.innerHTML = newLocation;
-  }
-  if (newPhotoURL !== "") {
-    oldPhotoURL.setAttribute("src", newPhotoURL);
   }
   if (newDescription !== "") {
     oldDescription.innerHTML = newDescription;
@@ -97,6 +128,5 @@ function editCard(e) {
 function resetValues() {
   document.getElementById("destination").value = "";
   document.getElementById("location").value = "";
-  document.getElementById("photo").value = "";
   document.getElementById("description").value = "";
 }
