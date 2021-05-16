@@ -20,7 +20,7 @@ function handleSubmit(e) {
 
   const userDestinationInput = document.getElementById("destination").value;
   const userLocationInput = document.getElementById("location").value;
-  const url =
+  let url =
     "https://api.unsplash.com/search/photos/?query=" +
     userDestinationInput +
     "%20" +
@@ -35,10 +35,9 @@ function handleSubmit(e) {
 function addPictures(pictures) {
   //const element = event.target;
 
-  //console.log(pictures[0].urls);
   const random = Math.floor(Math.random() * pictures.length);
 
-  const photoURL = pictures[random].urls.small;
+  const photoURL = pictures[random].urls.thumb;
 
   const userDestinationInput = document.getElementById("destination").value;
   const userLocationInput = document.getElementById("location").value;
@@ -46,18 +45,22 @@ function addPictures(pictures) {
 
   const card = document.createElement("div");
   card.classList.add("card");
-  card.style.width = "18rem";
 
   card.innerHTML = `
-    <img class="card-img-top" src=${photoURL}>
     <div class="card-body">
+    <img class="card-img-top" src=${photoURL}>
       <h5 class="card-title">${userDestinationInput}</h5>
       <p class="card-text">${userLocationInput}</p>
       <p class="card-text">${userDescriptionInput}</p>
+      <button class="btn btn-warning" btn-type="edit">Edit</button>
+      <button class="btn btn-danger" btn-type="delete">Delete</button>
     </div>
   `;
 
   document.getElementById("wishlist_container").appendChild(card);
+
+  //reset the value to "" every submit so users wont have to delete previous inputs
+  resetValues();
 
   /* const destinationString = element.destination_name.value;
   const locationString = element.location_name.value;
@@ -93,6 +96,10 @@ function addPictures(pictures) {
     */
 }
 
+document
+  .getElementById("wishlist_container")
+  .addEventListener("click", editOrDelete);
+
 function editOrDelete(e) {
   const element = e.target;
 
@@ -110,9 +117,10 @@ function editCard(e) {
   const newLocation = prompt("Enter new location");
   const newDescription = prompt("Enter new description");
 
-  const oldDestination = element.parentElement.children[0];
-  const oldLocation = element.parentElement.children[1];
-  const oldDescription = element.parentElement.children[2];
+  const oldPhoto = element.parentElement.children[0];
+  const oldDestination = element.parentElement.children[1];
+  const oldLocation = element.parentElement.children[2];
+  const oldDescription = element.parentElement.children[3];
 
   if (newDestination !== "") {
     oldDestination.innerHTML = newDestination;
@@ -123,6 +131,8 @@ function editCard(e) {
   if (newDescription !== "") {
     oldDescription.innerHTML = newDescription;
   }
+
+  oldPhoto.src = url;
 }
 
 function resetValues() {
