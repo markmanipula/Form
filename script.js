@@ -96,43 +96,65 @@ function addPictures(pictures) {
     */
 }
 
+//handles delete button
 document
   .getElementById("wishlist_container")
-  .addEventListener("click", editOrDelete);
+  .addEventListener("click", function (e) {
+    const element = e.target;
 
-function editOrDelete(e) {
-  const element = e.target;
+    if (element.getAttribute("btn-type") === "delete") {
+      element.parentElement.parentElement.remove();
+    }
+  });
 
-  if (element.getAttribute("btn-type") === "delete") {
-    element.parentElement.parentElement.remove();
-  } else if (element.getAttribute("btn-type") === "edit") {
-    editCard(e);
-  }
-}
+//handles delete
+document
+  .getElementById("wishlist_container")
+  .addEventListener("click", function (e) {
+    const element = e.target;
 
-function editCard(e) {
-  const element = e.target;
+    if (element.getAttribute("btn-type") === "edit") {
+      handleEdit();
+    }
+  });
 
+//handle edit
+function handleEdit(e) {
   const newDestination = prompt("Enter new destination");
   const newLocation = prompt("Enter new location");
   const newDescription = prompt("Enter new description");
 
-  const oldPhoto = element.parentElement.children[0];
-  const oldDestination = element.parentElement.children[1];
-  const oldLocation = element.parentElement.children[2];
-  const oldDescription = element.parentElement.children[3];
+  let url =
+    "https://api.unsplash.com/search/photos/?query=" +
+    newDestination +
+    "%20" +
+    newLocation +
+    "&client_id=hlKxc2FU2gi-xIya9DZXnOjxfV1zNk9DE36J1lILiAc";
 
-  if (newDestination !== "") {
-    oldDestination.innerHTML = newDestination;
-  }
-  if (newLocation !== "") {
-    oldLocation.innerHTML = newLocation;
-  }
-  if (newDescription !== "") {
-    oldDescription.innerHTML = newDescription;
-  }
+  fetch(url)
+    .then((response) => response.json())
+    .then((pictures) => editCard(pictures.results));
+}
 
-  oldPhoto.src = url;
+function editCard(pictures) {
+  console.log(pictures);
+  // const oldPhoto = element.parentElement.children[0];
+  // const oldDestination = element.parentElement.children[1];
+  // const oldLocation = element.parentElement.children[2];
+  // const oldDescription = element.parentElement.children[3];
+
+  // if (newDestination !== "") {
+  //   oldDestination.innerHTML = newDestination;
+  // }
+  // if (newLocation !== "") {
+  //   oldLocation.innerHTML = newLocation;
+  // }
+  // if (newDescription !== "") {
+  //   oldDescription.innerHTML = newDescription;
+  // }
+
+  // //need to do another api request here. not sure how
+  // oldPhoto.src = url;
 }
 
 function resetValues() {
